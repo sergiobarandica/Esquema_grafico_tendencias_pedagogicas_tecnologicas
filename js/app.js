@@ -204,12 +204,12 @@ B.forEach(b=>b.subs.forEach((s,i)=>{s.img=`img/c/${b.id}${i+1}.png`}));
 const CORE_IMG=`<img class="cart" src="img/c/centro.png" alt="" draggable="false">`;
 
 // ===== Geometría =====
-const W=2200,H=1420,CX=1100,CY=660;
+const W=2440,H=1470,CX=1220,CY=760;
 const stage=document.getElementById('stage'), svg=document.getElementById('links');
 const NS='http://www.w3.org/2000/svg';
 const totalSubs=B.reduce((s,b)=>s+b.subs.length,0);
 // El sector inferior queda libre para el robot: los conceptos se reparten a igual distancia sobre una elipse entre 135° y 405°.
-const rad=a=>a*Math.PI/180, RX=930, RY=590;
+const rad=a=>a*Math.PI/180, RX=1060, RY=690;
 const samp=[];{let acc=0,prev=null;for(let a=135;a<=405.001;a+=0.25){const p={a,x:CX+RX*Math.cos(rad(a)),y:CY+RY*Math.sin(rad(a))};if(prev)acc+=Math.hypot(p.x-prev.x,p.y-prev.y);p.L=acc;samp.push(p);prev=p}}
 const totalL=samp[samp.length-1].L; let si=0;
 const slots=Array.from({length:totalSubs},(_,i)=>{const target=totalL*i/(totalSubs-1);while(si<samp.length-1&&samp[si].L<target)si++;return samp[si]});
@@ -217,13 +217,31 @@ let k=0;
 B.forEach(b=>{
   const ss=b.subs.map(()=>slots[k++]);
   const mm=b.subs.length%2?ss[(b.subs.length-1)/2].a:(ss[b.subs.length/2-1].a+ss[b.subs.length/2].a)/2;
-  b.pos={x:CX+570*Math.cos(rad(mm)), y:CY+405*Math.sin(rad(mm))};
+  b.pos={x:CX+640*Math.cos(rad(mm)), y:CY+470*Math.sin(rad(mm))};
   b.subs.forEach((s,i)=>{s.pos={x:ss[i].x,y:ss[i].y}});
 });
 
 function path(d,cls,on){const p=document.createElementNS(NS,'path');p.setAttribute('d',d);p.setAttribute('class',cls);if(on)p.dataset.on=on;svg.appendChild(p);return p}
-function label(x,y,txt,cls,on){const l=document.createElement('div');l.className='lbl '+(cls||'');l.style.left=x+'px';l.style.top=y+'px';l.textContent=txt;if(on)l.dataset.on=on;stage.appendChild(l);return l}
-function q(x1,y1,x2,y2,bend){const mx=(x1+x2)/2,my=(y1+y2)/2,dx=x2-x1,dy=y2-y1;const cx=mx-dy*bend,cy=my+dx*bend;return {d:`M${x1},${y1} Q${cx},${cy} ${x2},${y2}`,lx:(x1+2*cx+x2)/4,ly:(y1+2*cy+y2)/4}}
+// Etiquetas de enlace: cada una puede deslizarse a lo largo de su línea (along) para no tapar otros elementos
+const LABELS=[];
+function label(x,y,txt,cls,on,along){const l=document.createElement('div');l.className='lbl '+(cls||'');l.style.left=x+'px';l.style.top=y+'px';l.textContent=txt;if(on)l.dataset.on=on;stage.appendChild(l);if(along)LABELS.push({el:l,along});return l}
+const alongLine=(a,b,t0,t1)=>t=>{const u=t0+(t1-t0)*t;return{x:a.x+(b.x-a.x)*u,y:a.y+(b.y-a.y)*u}};
+const alongPoly=pts=>{const seg=[];let tot=0;for(let i=1;i<pts.length;i++){const l=Math.hypot(pts[i].x-pts[i-1].x,pts[i].y-pts[i-1].y);seg.push(l);tot+=l}
+  return t=>{let d=t*tot,i=0;while(i<seg.length-1&&d>seg[i]){d-=seg[i];i++}const u=seg[i]?d/seg[i]:0;return{x:pts[i].x+(pts[i+1].x-pts[i].x)*u,y:pts[i].y+(pts[i+1].y-pts[i].y)*u}}};
+const alongQuad=(a,c,b)=>t=>({x:(1-t)*(1-t)*a.x+2*(1-t)*t*c.x+t*t*b.x,y:(1-t)*(1-t)*a.y+2*(1-t)*t*c.y+t*t*b.y});
+function placeLabels(){
+  const sr=stage.getBoundingClientRect(), sc=sr.width/stage.offsetWidth||1;
+  const box=e=>{const r=e.getBoundingClientRect();return{x:(r.left-sr.left)/sc,y:(r.top-sr.top)/sc,w:r.width/sc,h:r.height/sc}};
+  const obs=[...stage.querySelectorAll('.node .tile,.node .sub b,.node .main .art,.node .main .tag,.node .main h3,.node .core')].filter(e=>!e.closest('.token')).map(box);
+  const hit=(a,b,p=5)=>{const w=Math.min(a.x+a.w+p,b.x+b.w)-Math.max(a.x-p,b.x),h=Math.min(a.y+a.h+p,b.y+b.h)-Math.max(a.y-p,b.y);return w>0&&h>0?w*h:0};
+  const T=[.5,.42,.58,.34,.66,.27,.73,.2,.8,.14,.86,.08,.92];
+  const placed=[];
+  LABELS.forEach(L=>{const w=L.el.offsetWidth,h=L.el.offsetHeight;let best=null;
+    for(const t of T){const p=L.along(t),b={x:p.x-w/2,y:p.y-h/2,w,h};const cost=obs.concat(placed).reduce((s,o)=>s+hit(b,o),0);
+      if(!best||cost<best.cost)best={p,b,cost};if(cost===0)break}
+    L.el.style.left=best.p.x+'px';L.el.style.top=best.p.y+'px';placed.push(best.b)});
+}
+function q(x1,y1,x2,y2,bend){const mx=(x1+x2)/2,my=(y1+y2)/2,dx=x2-x1,dy=y2-y1;const cx=mx-dy*bend,cy=my+dx*bend;return {c:{x:cx,y:cy},d:`M${x1},${y1} Q${cx},${cy} ${x2},${y2}`,lx:(x1+2*cx+x2)/4,ly:(y1+2*cy+y2)/4}}
 // Conector ortogonal estilo diagrama de flujo
 function ortho(a,b){const dx=b.x-a.x,dy=b.y-a.y;
   if(Math.abs(dx)>Math.abs(dy)){const mx=a.x+dx/2;return{d:`M${a.x},${a.y} H${mx} V${b.y} H${b.x}`,lx:mx,ly:(a.y+b.y)/2}}
@@ -231,17 +249,17 @@ function ortho(a,b){const dx=b.x-a.x,dy=b.y-a.y;
 
 B.forEach(b=>{
   path(`M${CX},${CY} L${b.pos.x},${b.pos.y}`,'lnk-main',b.id);
-  label(CX+(b.pos.x-CX)*0.5,CY+(b.pos.y-CY)*0.5,b.link,'',b.id);
+  label(CX+(b.pos.x-CX)*0.5,CY+(b.pos.y-CY)*0.5,b.link,'',b.id,alongLine({x:CX,y:CY},b.pos,.3,.75));
   const mid=Math.floor((b.subs.length-1)/2);
-  b.subs.forEach((s,i)=>{const t=ortho(b.pos,s.pos);path(t.d,'lnk-sub',b.id); if(i===mid) label(t.lx,t.ly,s.via,'small',b.id);});
+  b.subs.forEach((s,i)=>{const t=ortho(b.pos,s.pos);path(t.d,'lnk-sub',b.id); if(i===mid) label(t.lx,t.ly,s.via,'small',b.id,alongPoly(orthoPts(b.pos,s.pos).slice(1,-1).length?orthoPts(b.pos,s.pos):[b.pos,s.pos]));});
 });
 const byId=Object.fromEntries(B.map(b=>[b.id,b]));
 CROSS.forEach(cx=>{const a=byId[cx.a].pos,b=byId[cx.b].pos;
   const t1=q(a.x,a.y,b.x,b.y,0.95), t2=q(a.x,a.y,b.x,b.y,-0.95); const t=Math.hypot(t1.lx-CX,t1.ly-CY)<Math.hypot(t2.lx-CX,t2.ly-CY)?t1:t2;
-  path(t.d,'lnk-cross',cx.a+cx.b); label(t.lx,t.ly,cx.label,'cross',cx.a+cx.b);});
+  path(t.d,'lnk-cross',cx.a+cx.b); label(t.lx,t.ly,cx.label,'cross',cx.a+cx.b,alongQuad(a,t.c,b));});
 
 // ===== Robot asistente flotante, centrado bajo el núcleo (ilustración propia) =====
-const RS=0.3, RTX=CX-975*0.3, RTY=800;            // escala y posición del robot en el lienzo
+const RS=0.3, RTX=CX-975*0.3, RTY=CY+140;            // escala y posición del robot en el lienzo
 const toStage=(x,y)=>({x:RTX+x*RS, y:RTY+y*RS});
 const HEADC=toStage(975,520);
 // Brazos: pivote en el hombro, punta de la mano en reposo y ángulo al levantar
@@ -435,6 +453,9 @@ function fitScale(){return Math.max((box.clientWidth-PAD*2)/W, 0.45)}
 function apply(s){stage.style.transform=`scale(${s})`;stage.style.left=PAD+'px';stage.style.top=PAD+'px';outer.style.width=(W*s+PAD*2)+'px';outer.style.height=(H*s+PAD*2)+'px'}
 function refit(){apply(zoom??fitScale())}
 window.addEventListener('resize',refit);refit();
+placeLabels();
+if(document.fonts&&document.fonts.ready)document.fonts.ready.then(placeLabels);
+window.addEventListener('load',placeLabels);
 if(box.scrollWidth>box.clientWidth){box.scrollLeft=(box.scrollWidth-box.clientWidth)/2}
 document.getElementById('btn-fit').onclick=()=>{zoom=null;refit()};
 document.getElementById('btn-zoom-in').onclick=()=>{zoom=Math.min((zoom??fitScale())*1.2,1.4);refit()};
