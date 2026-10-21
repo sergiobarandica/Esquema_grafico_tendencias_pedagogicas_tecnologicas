@@ -53,7 +53,7 @@ h1{font-size:clamp(32px,5.4vw,60px);font-weight:700;color:#fff;letter-spacing:.0
 
 /* Mapa */
 .mapbox{overflow:auto;position:relative;border-radius:14px;background:rgba(255,255,255,.08);box-shadow:inset 0 0 0 2px rgba(255,255,255,.35);
-  --mw:min(calc(100vw - 48px),1680px);width:var(--mw);margin-left:calc((100% - var(--mw)) / 2)}
+  --mw:min(calc(100vw - 32px),1900px);width:var(--mw);margin-left:calc((100% - var(--mw)) / 2)}
 .stage-outer{position:relative}
 .stage{position:absolute;left:0;top:0;width:2200px;height:1420px;transform-origin:0 0}
 .stage svg.links,.stage svg.robot{position:absolute;left:0;top:0;width:2200px;height:1420px;overflow:visible}

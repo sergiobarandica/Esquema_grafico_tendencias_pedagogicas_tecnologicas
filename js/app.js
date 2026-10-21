@@ -429,8 +429,10 @@ document.addEventListener('keydown',e=>{if(!pres.on||!modal.hidden)return;if(e.k
 const box=document.getElementById('mapbox'),outer=document.getElementById('outer');
 box.addEventListener('click',e=>{if(!e.target.closest('.node'))clearSelection()});
 let zoom=null;
-function fitScale(){return Math.max(box.clientWidth/W, 0.45)}
-function apply(s){stage.style.transform=`scale(${s})`;outer.style.width=(W*s)+'px';outer.style.height=(H*s)+'px'}
+// Margen interior para que los elementos ampliados con el zoom no se corten en los bordes
+const PAD=70;
+function fitScale(){return Math.max((box.clientWidth-PAD*2)/W, 0.45)}
+function apply(s){stage.style.transform=`scale(${s})`;stage.style.left=PAD+'px';stage.style.top=PAD+'px';outer.style.width=(W*s+PAD*2)+'px';outer.style.height=(H*s+PAD*2)+'px'}
 function refit(){apply(zoom??fitScale())}
 window.addEventListener('resize',refit);refit();
 if(box.scrollWidth>box.clientWidth){box.scrollLeft=(box.scrollWidth-box.clientWidth)/2}
