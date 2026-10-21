@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Mapa IA y Pedagogía</title>
+<meta name="description" content="Esquema gráfico interactivo sobre pedagogías y tecnologías emergentes: la inteligencia artificial en la enseñanza y el aprendizaje. MTIE, Universidad Santo Tomás.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Barlow:ital,wght@0,400;0,500;0,600;1,400&display=swap">
+<link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+<div class="band"><div class="wrap">
+  <div class="kicker">Maestría en Tecnología e Innovación Educativa · Universidad Santo Tomás · Actividad 1.2 Problematizando</div>
+  <h1>Pedagogías y tecnologías emergentes</h1>
+  <div class="sub-title">La inteligencia artificial en la enseñanza y el aprendizaje</div>
+  <div class="team"><span><b>Estudiantes:</b> Nataly Johana Barandica Pérez · Sergio Andrés Barandica Pérez · David Eduardo Moreno Mateus</span><span><b>Docente:</b> María Ximena López Ramírez</span></div>
+</div></div>
+
+<div class="wrap">
+  <div class="intro-row">
+    <div class="how" aria-label="Cómo usar el mapa">
+      <span class="st"><b>1</b>Toque un concepto</span><span class="ar" aria-hidden="true">→</span>
+      <span class="st"><b>2</b>El robot lo lleva al centro</span><span class="ar" aria-hidden="true">→</span>
+      <span class="st"><b>3</b>Toque el centro para leer</span>
+    </div>
+    <div class="chips"><span class="chip"><b>8</b>ramas</span><span class="chip"><b>25</b>conceptos</span><span class="chip"><b>13</b>fuentes</span></div>
+  </div>
+  <div class="toolbar" role="toolbar" aria-label="Controles del mapa">
+    <button class="btn primary" id="btn-present" type="button"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 5l12 7-12 7z"/></svg>Socializar (5 min)</button>
+    <button class="btn" id="btn-zoom-out" type="button" aria-label="Alejar">−</button>
+    <button class="btn" id="btn-fit" type="button">Ajustar</button>
+    <button class="btn" id="btn-zoom-in" type="button" aria-label="Acercar">+</button>
+    <span class="hint">En el celular, deslice el mapa o abra la vista en lista.</span>
+  </div>
+</div>
+
+<div class="wrap">
+  <div class="mapbox" id="mapbox">
+    <div class="stage-outer" id="outer">
+      <div class="stage" id="stage">
+        <svg class="links" id="links" viewBox="0 0 2200 1420" aria-hidden="true"></svg>
+        <svg class="robot" id="robot" viewBox="0 0 2200 1420" aria-hidden="true"></svg>
+      </div>
+    </div>
+  </div>
+
+  <section id="interaccion">
+    <h2>Cómo interactúan pedagogía y tecnología</h2>
+    <div class="cycle">
+      <div class="step"><span class="tile" data-n="1" style="--c:var(--yellow)" id="cy1"></span><h3>La pedagogía fija el propósito</h3><p>Primero las metas de aprendizaje, luego la herramienta.</p></div>
+      <div class="step"><span class="tile" data-n="2" style="--c:var(--yellow)" id="cy2"></span><h3>La tecnología amplía lo posible</h3><p>Adapta el ritmo, responde de inmediato y facilita el seguimiento.</p></div>
+      <div class="step"><span class="tile" data-n="3" style="--c:var(--yellow)" id="cy3"></span><h3>El docente interpreta y decide</h3><p>Con una IA que pueda revisar, entender y corregir.</p></div>
+      <div class="step"><span class="tile" data-n="4" style="--c:var(--yellow)" id="cy4"></span><h3>La evidencia ajusta la práctica</h3><p>Los resultados mejoran la práctica y la herramienta.</p></div>
+    </div>
+  </section>
+
+  <section id="lista">
+    <details class="card"><summary>Vista en lista (todo el contenido)</summary><div class="outline" id="outline"></div></details>
+  </section>
+
+  <section id="referencias">
+    <details class="card" open><summary>Referencias</summary>
+    <ul class="refs" id="refs">
+      <li>Barr, A., &amp; Feigenbaum, E. A. (Eds.). (1981). <i>The handbook of artificial intelligence</i> (Vol. 1). HeurisTech Press; William Kaufmann.</li>
+      <li>Celik, I., Dindar, M., Muukkonen, H., &amp; Järvelä, S. (2022). The promises and challenges of artificial intelligence for teachers: A systematic review of research. <i>TechTrends, 66</i>, 616–630. https://doi.org/10.1007/s11528-022-00715-y</li>
+      <li>Chen, H., Park, H. W., &amp; Breazeal, C. (2020). Teaching and learning with children: Impact of reciprocal peer learning with a social robot on children’s learning and emotive engagement. <i>Computers &amp; Education, 150</i>, Artículo 103836. https://doi.org/10.1016/j.compedu.2020.103836</li>
+      <li>Holstein, K., McLaren, B. M., &amp; Aleven, V. (2019). Co-designing a real-time classroom orchestration tool to support teacher–AI complementarity. <i>Journal of Learning Analytics, 6</i>(2), 27–52. https://doi.org/10.18608/jla.2019.62.3</li>
+      <li>Material de clase. (s. f.). [Diapositivas sobre tecnologías emergentes en educación]. Pedagogías y Tecnologías Emergentes, Maestría en Tecnología e Innovación Educativa, Universidad Santo Tomás.</li>
+      <li>Park, D. H., Kim, H. K., Choi, I. Y., &amp; Kim, J. K. (2012). A literature review and classification of recommender systems research. <i>Expert Systems with Applications, 39</i>(11), 10059–10072. https://doi.org/10.1016/j.eswa.2012.02.038</li>
+      <li><i>¿Quién mandará en la inteligencia artificial?</i> [Video documental]. (s. f.). Material de apoyo del Módulo 1.</li>
+      <li>Rich, E., &amp; Knight, K. (1991). <i>Artificial intelligence</i> (2.ª ed.). McGraw-Hill.</li>
+      <li>Ruiz, P., &amp; Fusco, J. (2024). <i>Glossary of artificial intelligence terms for educators</i>. Educator CIRCLS. https://circls.org/educatorcircls/ai-glossary</li>
+      <li>Sarmiento, C. (2024). <i>Módulo 1: Tendencias tecnológicas y pedagógicas en el contexto educativo</i> [Material interactivo]. Pedagogías y Tecnologías Emergentes, Maestría en Tecnología e Innovación Educativa, Universidad Santo Tomás.</li>
+      <li>Shemshack, A., &amp; Spector, J. M. (2020). A systematic literature review of personalized learning terms. <i>Smart Learning Environments, 7</i>(1), Artículo 33. https://doi.org/10.1186/s40561-020-00140-9</li>
+      <li>Souabi, S., Retbi, A., Khalidi Idrissi, M., &amp; Bennani, S. (2021). Recommendation systems on e-learning and social learning: A systematic review. <i>Electronic Journal of e-Learning, 19</i>(5), 432–451.</li>
+      <li>U.S. Department of Education, Office of Educational Technology. (2023). <i>Artificial intelligence and the future of teaching and learning: Insights and recommendations</i>. https://tech.ed.gov/ai-future-of-teaching-and-learning/</li>
+    </ul></details>
+  </section>
+  <footer>Esquema gráfico de la Actividad Sumativa 1.2 · Nataly Johana Barandica Pérez, Sergio Andrés Barandica Pérez y David Eduardo Moreno Mateus · Docente: María Ximena López Ramírez</footer>
+</div>
+
+<div class="modal" id="modal" hidden role="dialog" aria-modal="true" aria-labelledby="m-title">
+  <div class="m-card" id="m-card">
+    <button class="x" id="m-x" type="button" aria-label="Cerrar">×</button>
+    <div class="m-top"><span id="m-icon"></span><div><div class="eyebrow" id="m-eyebrow"></div><h3 id="m-title"></h3></div></div>
+    <div class="m-body" id="m-body"></div>
+  </div>
+</div>
+
+<aside class="panel" id="panel" hidden aria-live="polite">
+  <button class="x" id="panel-x" type="button" aria-label="Cerrar">×</button>
+  <div class="time" id="p-time"></div>
+  <div class="eyebrow" id="p-eyebrow"></div>
+  <h3 id="p-title"></h3>
+  <div id="p-body"></div>
+  <div class="nav" id="p-nav" hidden>
+    <button class="btn" id="p-prev" type="button">Anterior</button>
+    <button class="btn primary" id="p-next" type="button">Siguiente</button>
+    <span class="src" id="p-count"></span>
+  </div>
+</aside>
+<script src="js/app.js"></script>
+</body>
+</html>
