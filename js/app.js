@@ -251,7 +251,8 @@ B.forEach(b=>{
   path(`M${CX},${CY} L${b.pos.x},${b.pos.y}`,'lnk-main',b.id);
   label(CX+(b.pos.x-CX)*0.5,CY+(b.pos.y-CY)*0.5,b.link,'',b.id,alongLine({x:CX,y:CY},b.pos,.3,.75));
   const mid=Math.floor((b.subs.length-1)/2);
-  b.subs.forEach((s,i)=>{const t=ortho(b.pos,s.pos);path(t.d,'lnk-sub',b.id); if(i===mid) label(t.lx,t.ly,s.via,'small',b.id,alongPoly(orthoPts(b.pos,s.pos).slice(1,-1).length?orthoPts(b.pos,s.pos):[b.pos,s.pos]));});
+  // Conexión radial: línea recta desde la rama hacia cada concepto
+  b.subs.forEach((s,i)=>{path(`M${b.pos.x},${b.pos.y} L${s.pos.x},${s.pos.y}`,'lnk-sub',b.id); if(i===mid) label((b.pos.x+s.pos.x)/2,(b.pos.y+s.pos.y)/2,s.via,'small',b.id,alongLine(b.pos,s.pos,.3,.75));});
 });
 const byId=Object.fromEntries(B.map(b=>[b.id,b]));
 CROSS.forEach(cx=>{const a=byId[cx.a].pos,b=byId[cx.b].pos;
@@ -362,8 +363,8 @@ function launch(it){
   const info=itemInfo(it);
   setArms(true);
   if(RM){lookAt(it.pos);loadCore(it);return}
-  // Recorrido por las mismas líneas blancas: concepto → (conector ortogonal) → rama → (línea principal) → centro
-  const pts = it.kind==='s' ? [...orthoPts(it.b.pos,it.s.pos).reverse(), {x:CX,y:CY}] : [it.pos,{x:CX,y:CY}];
+  // Recorrido por las mismas líneas blancas: concepto → (línea radial) → rama → (línea principal) → centro
+  const pts = it.kind==='s' ? [it.s.pos, it.b.pos, {x:CX,y:CY}] : [it.pos,{x:CX,y:CY}];
   const seg=[]; let total=0; for(let i=1;i<pts.length;i++){const l=Math.hypot(pts[i].x-pts[i-1].x,pts[i].y-pts[i-1].y);seg.push(l);total+=l}
   const at=d=>{let i=0;while(i<seg.length-1&&d>seg[i]){d-=seg[i];i++}const t=seg[i]?Math.min(1,d/seg[i]):1;return{x:lerp(pts[i].x,pts[i+1].x,t),y:lerp(pts[i].y,pts[i+1].y,t)}};
   const tok=document.createElement('div'); tok.className='token'; tok.innerHTML=figHTML(info); stage.appendChild(tok);
