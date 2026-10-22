@@ -1,4 +1,4 @@
-/* Ajustes base que en la vista de Claude aportaba la plantilla de publicación */
+/* Ajustes base que en la vista de la plantilla de publicación */
 html{-webkit-text-size-adjust:100%}
 :root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
 img{max-width:100%}
